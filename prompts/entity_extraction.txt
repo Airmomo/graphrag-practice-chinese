@@ -1,0 +1,119 @@
+-目标-
+给定一个可能与此活动相关的文本文件和一个实体类型列表，从文本中识别出所有这些类型的实体以及这些实体之间的所有关系。
+
+-步骤-
+1. 识别所有实体。对于每个识别出的实体，提取以下信息：
+- 实体名称：实体的名称，需大写
+- 实体类型：以下类型之一：[ {entity_types} ]
+- 实体描述：对实体属性和活动的全面描述
+将每个实体格式化为 ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
+
+2. 从步骤1中识别的实体中，识别出所有*明确相关*的 (source_entity, target_entity) 对。
+对于每对相关实体，提取以下信息：
+- 源实体：步骤1中识别出的源实体名称
+- 目标实体：步骤1中识别出的目标实体名称
+- 关系描述：解释为什么认为源实体和目标实体之间存在关系
+- 关系强度：一个表示源实体和目标实体之间关系强度的数值评分
+将每个关系格式化为 ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
+
+3. 使用 **{record_delimiter}** 作为列表分隔符，以单个列表的形式返回步骤1和步骤2中识别的所有实体和关系。
+
+4. 完成后，输出 {completion_delimiter}
+
+######################
+-示例-
+######################
+示例 1:
+实体类型: ORGANIZATION,PERSON
+文本:
+Verdantis的中央机构计划在周一和周四召开会议，该机构计划在周四下午1:30 PDT发布最新的政策决定，随后中央机构主席Martin Smith将举行新闻发布会回答问题。投资者预计市场策略委员会将维持其基准利率在3.5%-3.75%之间。
+######################
+输出:
+("entity"{tuple_delimiter}CENTRAL INSTITUTION{tuple_delimiter}ORGANIZATION{tuple_delimiter}中央机构是Verdantis的联邦储备，负责在周一和周四设定利率)
+{record_delimiter}
+("entity"{tuple_delimiter}MARTIN SMITH{tuple_delimiter}PERSON{tuple_delimiter}Martin Smith是中央机构的主席)
+{record_delimiter}
+("entity"{tuple_delimiter}MARKET STRATEGY COMMITTEE{tuple_delimiter}ORGANIZATION{tuple_delimiter}中央机构委员会负责关于利率和Verdantis货币供应增长的关键决策)
+{record_delimiter}
+("relationship"{tuple_delimiter}MARTIN SMITH{tuple_delimiter}CENTRAL INSTITUTION{tuple_delimiter}Martin Smith是中央机构的主席，并将在新闻发布会上回答问题{tuple_delimiter}9)
+{completion_delimiter}
+
+######################
+示例 2:
+实体类型: ORGANIZATION
+文本:
+TechGlobal（TG）的股票在周四的全球交易所开盘当天飙升。但IPO专家警告称，这家半导体公司的上市表现并不能代表其他新上市公司的表现。
+
+TechGlobal是一家曾经上市的公司，2014年被Vision Holdings私有化。这家知名的芯片设计公司表示，其产品为85%的高端智能手机提供动力。
+######################
+输出:
+("entity"{tuple_delimiter}TECHGLOBAL{tuple_delimiter}ORGANIZATION{tuple_delimiter}TechGlobal是一家现在在全球交易所上市的公司，其产品为85%的高端智能手机提供动力)
+{record_delimiter}
+("entity"{tuple_delimiter}VISION HOLDINGS{tuple_delimiter}ORGANIZATION{tuple_delimiter}Vision Holdings是一家曾经拥有TechGlobal的公司)
+{record_delimiter}
+("relationship"{tuple_delimiter}TECHGLOBAL{tuple_delimiter}VISION HOLDINGS{tuple_delimiter}Vision Holdings从2014年起曾经拥有TechGlobal{tuple_delimiter}5)
+{completion_delimiter}
+
+######################
+示例 3:
+实体类型: ORGANIZATION,GEO,PERSON
+文本:
+五名Aurelians在Firuzabad被监禁8年，被广泛认为是人质，现在正返回Aurelia。
+
+由Quintara策划的交换在$80亿Firuzi资金转移到Krohaara的金融机构后完成，Krohaara是Quintara的首都。
+
+交换在Firuzabad的首都Tiruzia进行，四男一女，这些人也是Firuzi国民，登上了一架飞往Krohaara的包机。
+
+他们受到了Aurelian高级官员的欢迎，现在正前往Aurelia的首都Cashion。
+
+这些Aurelians包括39岁的商人Samuel Namara，他曾被关押在Tiruzia的Alhamia监狱，以及59岁的记者Durke Bataglani和53岁的环保主义者Meggie Tazbah，她也拥有Bratinas国籍。
+######################
+输出:
+("entity"{tuple_delimiter}FIRUZABAD{tuple_delimiter}GEO{tuple_delimiter}Firuzabad关押了Aurelians作为人质)
+{record_delimiter}
+("entity"{tuple_delimiter}AURELIA{tuple_delimiter}GEO{tuple_delimiter}寻求释放人质的国家)
+{record_delimiter}
+("entity"{tuple_delimiter}QUINTARA{tuple_delimiter}GEO{tuple_delimiter}谈判用钱换取人质的国家)
+{record_delimiter}
+("entity"{tuple_delimiter}TIRUZIA{tuple_delimiter}GEO{tuple_delimiter}Firuzabad的首都，Aurelians被关押的地方)
+{record_delimiter}
+("entity"{tuple_delimiter}KROHAARA{tuple_delimiter}GEO{tuple_delimiter}Quintara的首都)
+{record_delimiter}
+("entity"{tuple_delimiter}CASHION{tuple_delimiter}GEO{tuple_delimiter}Aurelia的首都)
+{record_delimiter}
+("entity"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}PERSON{tuple_delimiter}在Tiruzia的Alhamia监狱服刑的Aurelian)
+{record_delimiter}
+("entity"{tuple_delimiter}ALHAMIA PRISON{tuple_delimiter}GEO{tuple_delimiter}Tiruzia的监狱)
+{record_delimiter}
+("entity"{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}PERSON{tuple_delimiter}被关押的人质Aurelian记者)
+{record_delimiter}
+("entity"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}PERSON{tuple_delimiter}Bratinas国籍的环保主义者，被关押的人质)
+{record_delimiter}
+("relationship"{tuple_delimiter}FIRUZABAD{tuple_delimiter}AURELIA{tuple_delimiter}Firuzabad与Aurelia谈判人质交换{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}QUINTARA{tuple_delimiter}AURELIA{tuple_delimiter}Quintara促成了Firuzabad和Aurelia之间的人质交换{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}QUINTARA{tuple_delimiter}FIRUZABAD{tuple_delimiter}Quintara促成了Firuzabad和Aurelia之间的人质交换{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}ALHAMIA PRISON{tuple_delimiter}Samuel Namara曾是Alhamia监狱的囚犯{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}Samuel Namara和Meggie Tazbah在同一次人质释放中被交换{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}Samuel Namara和Durke Bataglani在同一次人质释放中被交换{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}Meggie Tazbah和Durke Bataglani在同一次人质释放中被交换{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}FIRUZABAD{tuple_delimiter}Samuel Namara曾是Firuzabad的人质{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}FIRUZABAD{tuple_delimiter}Meggie Tazbah曾是Firuzabad的人质{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}FIRUZABAD{tuple_delimiter}Durke Bataglani曾是Firuzabad的人质{tuple_delimiter}2)
+{completion_delimiter}
+
+######################
+-真实数据-
+######################
+实体类型: {entity_types}
+文本: {input_text}
+######################
+输出:

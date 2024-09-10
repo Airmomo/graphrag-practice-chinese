@@ -1,0 +1,51 @@
+-目标活动-
+你是一个智能助手，帮助人类分析师分析文本文件中针对某些实体的声明。
+
+-目标-
+给定一个可能与此活动相关的文本文件、一个实体规范和一个声明描述，提取所有符合实体规范的实体以及针对这些实体的所有声明。
+
+-步骤-
+1. 提取所有符合预定义实体规范的命名实体。实体规范可以是实体名称列表或实体类型列表。
+2. 对于步骤1中识别的每个实体，提取与该实体相关的所有声明。声明需要符合指定的声明描述，并且实体应为声明的主体。
+对于每个声明，提取以下信息：
+- 主体：声明主体的实体名称，需大写。主体实体是声明中描述的行为的执行者。主体需要是步骤1中识别的命名实体之一。
+- 客体：声明客体的实体名称，需大写。客体实体是报告/处理或受声明中描述的行为影响的实体。如果客体实体未知，使用 **NONE**。
+- 声明类型：声明的总体类别，需大写。命名方式应能在多个文本输入中重复使用，以便相似的声明共享相同的声明类型。
+- 声明状态：**TRUE**、**FALSE** 或 **SUSPECTED**。TRUE 表示声明已确认，FALSE 表示声明被发现为假，SUSPECTED 表示声明未验证。
+- 声明描述：详细描述解释声明的理由，以及所有相关的证据和参考资料。
+- 声明日期：声明提出的时间段（start_date, end_date）。start_date 和 end_date 都应为 ISO-8601 格式。如果声明是在单一日期提出的，则将同一日期设置为 start_date 和 end_date。如果日期未知，返回 **NONE**。
+- 声明来源文本：列出原始文本中与声明相关的**所有**引用。
+
+将每个声明格式化为 (<subject_entity>{tuple_delimiter}<object_entity>{tuple_delimiter}<claim_type>{tuple_delimiter}<claim_status>{tuple_delimiter}<claim_start_date>{tuple_delimiter}<claim_end_date>{tuple_delimiter}<claim_description>{tuple_delimiter}<claim_source>)
+
+3. 使用 **{record_delimiter}** 作为列表分隔符，将步骤1和2中识别的所有声明作为单个列表返回。
+
+4. 完成后，输出 {completion_delimiter}
+
+-示例-
+示例1:
+实体规范: organization
+声明描述: 与实体相关的红旗
+文本: 根据2022/01/10的一篇文章，A公司因在多个政府机构B发布的公开招标中串标而被罚款。该公司由C人拥有，C人被怀疑在2015年从事腐败活动。
+输出:
+
+(A公司{tuple_delimiter}政府机构B{tuple_delimiter}反竞争行为{tuple_delimiter}TRUE{tuple_delimiter}2022-01-10T00:00:00{tuple_delimiter}2022-01-10T00:00:00{tuple_delimiter}根据2022/01/10发表的一篇文章，A公司因在多个政府机构B发布的公开招标中串标而被罚款{tuple_delimiter}根据2022/01/10发表的一篇文章，A公司因在多个政府机构B发布的公开招标中串标而被罚款。)
+{completion_delimiter}
+
+示例2:
+实体规范: A公司, C人
+声明描述: 与实体相关的红旗
+文本: 根据2022/01/10的一篇文章，A公司因在多个政府机构B发布的公开招标中串标而被罚款。该公司由C人拥有，C人被怀疑在2015年从事腐败活动。
+输出:
+
+(A公司{tuple_delimiter}政府机构B{tuple_delimiter}反竞争行为{tuple_delimiter}TRUE{tuple_delimiter}2022-01-10T00:00:00{tuple_delimiter}2022-01-10T00:00:00{tuple_delimiter}根据2022/01/10发表的一篇文章，A公司因在多个政府机构B发布的公开招标中串标而被罚款{tuple_delimiter}根据2022/01/10发表的一篇文章，A公司因在多个政府机构B发布的公开招标中串标而被罚款。)
+{record_delimiter}
+(C人{tuple_delimiter}NONE{tuple_delimiter}腐败{tuple_delimiter}SUSPECTED{tuple_delimiter}2015-01-01T00:00:00{tuple_delimiter}2015-12-30T00:00:00{tuple_delimiter}C人被怀疑在2015年从事腐败活动{tuple_delimiter}该公司由C人拥有，C人被怀疑在2015年从事腐败活动。)
+{completion_delimiter}
+
+-真实数据-
+使用以下输入进行回答。
+实体规范: {entity_specs}
+声明描述: {claim_description}
+文本: {input_text}
+输出:
