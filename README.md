@@ -5,6 +5,9 @@
 ```bash
 mkdir ./graphrag-practice
 
+# 创建 input 目录，用于构建索引的文本文件默认存放于该目录下，可以按需修改 settings.yaml 文件中的 input 部分来指定路径
+mkdir ./graphrag-practice/input
+
 git clone https://github.com/zhaoyingjun/graphrag-practice.git ./graphrag-practice
 
 # 这一命令将在 ./ragtest 目录中创建两个文件：.env 和 settings.yaml（这两个文件涉及密钥，所以没有上传，需自行初始化后按需修改。）
@@ -100,6 +103,11 @@ input:
   file_pattern: ".*\\.txt$"
 # ... 其他设置保持不变 ...
 ```
+
+构建过程中会自动创建
+
+- output 目录，用于存放查询结果。
+- cache 目录，用于存放缓存数据。
 
 索引构建完成后会提示：`All workflows completed successfully` ，说明即可进行查询。
 
