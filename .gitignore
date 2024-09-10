@@ -10,3 +10,6 @@ output/
 
 # cache
 cache/
+
+# log
+graphrag_terminal.log
