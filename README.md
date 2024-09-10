@@ -12,7 +12,7 @@ mkdir ./graphrag-practice-chinese/input
 
 git clone https://github.com/zhaoyingjun/graphrag-practice-chinese.git ./graphrag-practice-chinese
 
-# 这一命令将在 ./ragtest 目录中创建两个文件：.env 和 settings.yaml（这两个文件涉及密钥，所以没有上传，需自行初始化后按需修改。）
+# 这一命令将在 ./graphrag-practice-chinese 目录中创建两个文件：.env 和 settings.yaml（这两个文件涉及密钥，所以没有上传，需自行初始化后按需修改。）
 python -m graphrag.index --init --root ./graphrag-practice-chinese
 ```
 
@@ -118,13 +118,41 @@ input:
 ## global 全局查询
 
 ```python
-python -m graphrag.query --root ./ragtest --method global "故事的主旨是什么？"
+python -m graphrag.query --root ./graphrag-practice-chinese --method global "故事的主旨是什么？"
 ```
 
 ## local 本地查询
 
 ```python
-python -m graphrag.query --root ./ragtest --method local "贾母对宝玉的态度怎么样？"
+python -m graphrag.query --root ./graphrag-practice-chinese --method local "贾母对宝玉的态度怎么样？"
+```
+
+查询结果示例：
+
+```markdown
+SUCCESS: Local Search Response:
+
+### 贾母对宝玉的态度
+
+贾母对宝玉的态度可以从多个方面来分析，主要包括溺爱、关心和期望。
+
+#### 溺爱
+
+贾母对宝玉的溺爱是显而易见的。在《红楼梦》中，贾母对宝玉的宠爱贯穿始终。例如，贾母经常为宝玉提供特殊的照顾和关注，甚至在宝玉生病时亲自探视，表现出极大的关心和担忧 [Data: Sources (607, 314, 347)]。此外，贾母对宝玉的溺爱还体现在她对宝玉的宽容上，即使宝玉有时行为不端，贾母也往往选择包容和理解 [Data: Relationships (732, 992, 1052)]。
+
+#### 关心
+
+除了溺爱，贾母对宝玉的关心也是全方位的。她不仅关心宝玉的身体健康，还关注他的心理状态。在宝玉生病期间，贾母不仅亲自探视，还多次询问病情，甚至为宝玉的病情感到焦虑 [Data: Sources (607, 314)]。此外，贾母还关心宝玉的教育和成长，尽管她对宝玉的管教并不严格，但仍然希望宝玉能够成为一个有出息的人 [Data: Entities (5868); Relationships (1052)]。
+
+#### 期望
+
+贾母对宝玉的期望也是显而易见的。作为贾府的重要人物，贾母希望宝玉能够继承家业，成为一个有担当的人。尽管宝玉的性格和行为常常让贾母感到失望，但她仍然对宝玉抱有期望，希望他能够改过自新，承担起家族的责任 [Data: Sources (347); Relationships (1165)]。
+
+### 总结
+
+总的来说，贾母对宝玉的态度是复杂而多层次的，既有溺爱和关心，也有期望和失望。她既是宝玉的祖母，也是贾府的权威人物，因此她在对待宝玉时既有亲情的一面，也有家族责任的一面。这种复杂的态度在《红楼梦》中得到了充分的展现，使得贾母这一角色更加立体和丰富 [Data: Entities (3895, 5470, 7130); Relationships (2123, 2134, 3583)]。
+
+通过对贾母对宝玉态度的分析，我们可以更深入地理解《红楼梦》中的人物关系和家族内部的复杂情感，从而更好地把握这部经典文学作品的核心内涵。
 ```
 
 ## Tip：全局查询和本地查询的区别
