@@ -1,17 +1,19 @@
-# graphrag-practice
+# graphrag-practice-chinese
+
+`graphrag-practice-chinese`是一个 GraphRAG 的应用实例，项目特点在于提供了替换 OpenAI 模型的方法，并通过修改原有提示和切分文档的方法，提高了 GraphRAG 处理中文内容的能力。
 
 # 搭建环境
 
 ```bash
-mkdir ./graphrag-practice
+mkdir ./graphrag-practice-chinese
 
 # 创建 input 目录，用于构建索引的文本文件默认存放于该目录下，可以按需修改 settings.yaml 文件中的 input 部分来指定路径
-mkdir ./graphrag-practice/input
+mkdir ./graphrag-practice-chinese/input
 
-git clone https://github.com/zhaoyingjun/graphrag-practice.git ./graphrag-practice
+git clone https://github.com/zhaoyingjun/graphrag-practice-chinese.git ./graphrag-practice-chinese
 
 # 这一命令将在 ./ragtest 目录中创建两个文件：.env 和 settings.yaml（这两个文件涉及密钥，所以没有上传，需自行初始化后按需修改。）
-python -m graphrag.index --init --root ./graphrag-practice
+python -m graphrag.index --init --root ./graphrag-practice-chinese
 ```
 
 `.env` 包含运行 GraphRAG pipeline 所需的环境变量。该文件定义了一个环境变量 `GRAPHRAG_API_KEY=<API_KEY>` 。
@@ -82,7 +84,7 @@ splitter:
 # 索引构建
 
 ```bash
-python -m graphrag.index --root ./graphrag-practice
+python -m graphrag.index --root ./graphrag-practice-chinese
 ```
 
 GraphRAG 会默认为 `input` 路径下的 `txt` 文件构建索引，如果需要指定文本文件的路径或类型，可以修改`settings.yaml`中的`input`部分。
