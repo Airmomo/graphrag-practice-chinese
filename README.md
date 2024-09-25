@@ -12,19 +12,24 @@ mkdir ./graphrag-practice-chinese/input
 
 git clone https://github.com/zhaoyingjun/graphrag-practice-chinese.git ./graphrag-practice-chinese
 
-# 这一命令将在 ./graphrag-practice-chinese 目录中创建两个文件：.env 和 settings.yaml（这两个文件涉及密钥，所以没有上传，需自行初始化后按需修改。）
+# 这一命令将在 ./graphrag-practice-chinese 目录中创建两个文件：.env 和 settings.yaml
 python -m graphrag.index --init --root ./graphrag-practice-chinese
 ```
 
-`.env` 包含运行 GraphRAG pipeline 所需的环境变量。该文件定义了一个环境变量 `GRAPHRAG_API_KEY=<API_KEY>` 。
-这是 OpenAI API 或 Azure OpenAI endpoint 的 API 密钥。我想要替换掉 OpenAI 模型，所以只需要修改`setting.yaml`，可以不用对该环境变量进行更改。
+# 修改配置文件
 
-`settings.yaml` 包含 pipeline 相关的设置。我选择更改了的 LLM 和 Embedding 部分，使用的是：
+GraphRAG 主要的配置文件有两个：`.env` 和 `settings.yaml`：
 
-- 智谱 AI 的 `glm-4-plus` 和 `embedding-3`。
-  - 大语言模型：`glm-4-plus`
-  - **这里推荐使用大语言模型`glm-4-flash`（首个免费调用的模型）**，因为在推理和总结阶段需要消耗大量的 Tokens。我尝试对完整的《红楼梦》原文构建索引，最终消耗了大约 700W 个 Tokens，个人学习用的话尽力而为吧。
-  - 嵌入模型：`embedding-3`
+- `.env` 包含运行 GraphRAG pipeline 所需的环境变量。该文件定义了一个环境变量 `GRAPHRAG_API_KEY=<API_KEY>` 。
+
+- `settings.yaml` 包含 pipeline 相关的设置。
+
+```
+在项目根目录你可以找到作为参考的配置文件 `demo.env` 和 `settings.demo.yaml`，你可以参考配置进行修改，也可以通过重命名覆盖初始化的配置文件。
+```
+
+**这里推荐使用大语言模型 glm-4-flash（首个免费调用的模型），因为在推理和总结阶段需要消耗大量的 Tokens。
+我尝试对完整的《红楼梦》原文构建索引，最终消耗了大约 700W 个 Tokens，个人学习用的话尽力而为吧。**
 
 # 优化策略 — 使模型侧重中文
 
