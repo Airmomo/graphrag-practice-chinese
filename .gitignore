@@ -13,3 +13,6 @@ cache/
 
 # log
 graphrag_terminal.log
+
+# else
+.DS_Store
