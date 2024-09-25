@@ -1,4 +1,4 @@
-# `settings.yaml` 包含管道的设置。我们需要在其中对两个模型的设置进行更改，这里更改了的 LLM 和 Embedding 部分，使用的是：
+# `settings.yaml` 包含了 GraphRAG pipeline 的设置。我们需要在其中对两个模型的设置进行更改，这里更改了的 LLM 和 Embedding 部分，使用的是：
 # 智谱 AI 的 `glm-4-flash` 和 `embedding-3`。
 # - 大语言模型：`glm-4-flash`
 # - 嵌入模型：`embedding-3`
