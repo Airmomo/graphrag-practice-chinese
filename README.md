@@ -4,7 +4,7 @@
 
 # 搭建环境
 
-```bash
+```shell
 mkdir ./graphrag-practice-chinese
 
 # 创建 input 目录，用于构建索引的文本文件默认存放于该目录下，可以按需修改 settings.yaml 文件中的 input 部分来指定路径
@@ -20,12 +20,13 @@ python -m graphrag.index --init --root ./graphrag-practice-chinese
 
 GraphRAG 主要的配置文件有两个：`.env` 和 `settings.yaml`：
 
-- `.env` 包含运行 GraphRAG pipeline 所需的环境变量。该文件定义了一个环境变量 `GRAPHRAG_API_KEY=<API_KEY>` 。
+- `.env` 包含运行 GraphRAG pipeline 所需的环境变量。该文件默认只定义了一个环境变量 `GRAPHRAG_API_KEY=<API_KEY>` 。
 
 - `settings.yaml` 包含 pipeline 相关的设置。
 
 ```
-在项目根目录你可以找到作为参考的配置文件 `demo.env` 和 `settings.demo.yaml`，你可以参考配置进行修改，也可以通过重命名覆盖初始化的配置文件。
+在项目根目录你可以找到作为参考的配置文件 `demo.env` 和 `settings.demo.yaml`。
+你可以参考配置进行修改，也可以通过重命名覆盖初始化的配置文件。
 ```
 
 **这里推荐使用大语言模型 glm-4-flash（首个免费调用的模型），因为在推理和总结阶段需要消耗大量的 Tokens。
@@ -37,11 +38,12 @@ GraphRAG 主要的配置文件有两个：`.env` 和 `settings.yaml`：
 
 官方分块把文档按照 token 数进行切分，对于中文来说容易在 chunk 之间出现乱码，这里参考 Langchain-ChatChat 开源项目，用中文字符数对文本进行切分。
 
-方法 1:
+**方法 1:**
 
-- 用本项目下的 `splitter/chinese_text_splitter.py` 替换掉 python 依赖库中的 `graphrag/index/verbs/text/chunk/strategies/tokens.py` 即可。
+用本项目下的 `splitter/chinese_text_splitter.py` 替换掉 python 依赖库中的 `graphrag/index/verbs/text/chunk/strategies/tokens.py` 即可。
 
-方法 2:
+**方法 2:**
+
 要使用 `chinese_text_splitter.py` 中的 `ChineseTextSplitter` 作为文档分割方法，您需要在 `settings.yaml` 文件中添加一个新的 `splitter` 部分。以下是修改后的相关部分：
 
 ```yaml
@@ -61,7 +63,7 @@ splitter:
 # ... 其他设置保持不变 ...
 ```
 
-这里的修改说明：
+方法 2 的修改说明：
 
 1. 保留原有的 `chunks` 部分，因为它可能仍被用于其他目的。
 2. 添加新的 `splitter` 部分：
@@ -73,33 +75,33 @@ splitter:
 请注意：
 
 1. 确保 `chinese_text_splitter.py` 文件位于正确的位置，使得 GraphRAG 能够找到并导入它。
-2. 修改完成后，保存 `settings.yaml` 文件，然后**重新运行 GraphRAG 的索引构建命令**。这应该会使用 `ChineseTextSplitter` 来分割您的文档。
+2. 修改完成后，保存 `settings.yaml` 文件，然后**重新运行 GraphRAG 的索引构建命令**，就会使用 `ChineseTextSplitter` 来分割您的文档。
 
 ## 优化 2: prompt
 
-在 `prompts` 中可以看到 `GraphRAG` 的四个 prompt 文件的内容都由英文书写，并要求 LLM 使用英文输出。为了更好地处理中文内容，这里使用 `gpt-4o` 模型，将 `prompts` 中的四个 prompt 文件都翻译成中文，并要求 LLM 用中文输出结果。
+在 `prompts` 中可以看到 GraphRAG 的四个 prompt 文件的内容都由英文书写，并要求 LLM 使用英文输出。为了更好地处理中文内容，这里使用 `gpt-4o` 模型，将 `prompts` 中的四个 prompt 文件都翻译成中文，并要求 LLM 用中文输出结果。
 
 ## 优化 3: 模型调用
 
-`GraphRAG` 默认使用 `openai` 进行模型调用，该模型为国外模型，对中文支持并不友好。为更好地支持中文，这里选择 `bigmodel` 进行模型调用，该模型为国内大模型厂商智谱 AI 提供。
+GraphRAG 默认使用 openai 进行模型调用，该模型为国外模型，对中文支持并不友好。为更好地支持中文，这里选择 `bigmodel` 进行模型调用，该模型为国内大模型厂商智谱 AI 提供。
 
 ## 优化 4: 模型选择
 
-`GraphRAG` 默认使用 `gpt-4o` 模型，该模型为国外模型，对中文支持并不友好。为更好地支持中文，这里选择 `glm-4-plus` 模型，该模型为国内大模型厂商智谱 AI 提供。
+GraphRAG 默认使用 gpt-4o 模型，该模型为国外模型，对中文支持并不友好。为更好地支持中文，这里选择 `glm-4-plus` 模型，该模型为国内大模型厂商智谱 AI 提供。
 
 # 索引构建
 
-```bash
+```shell
 python -m graphrag.index --root ./graphrag-practice-chinese
 ```
 
 GraphRAG 会默认为 `input` 路径下的 `txt` 文件构建索引，如果需要指定文本文件的路径或类型，可以修改`settings.yaml`中的`input`部分。
 
-- 注意 GraphRAG 仅支持 `txt 或 csv` 类型的文件，编码格式必须为 `utf-8`。
+**注意 GraphRAG 仅支持 `txt 或 csv` 类型的文件，编码格式必须为 `utf-8`。**
 
 在本项目中，我将红楼梦原文文本作为样本，在此处将文件路径修改为`input/hongloumeng`，如下:
 
-如果你也想要把红楼梦原文文本作为样本，可以通过我的另一个项目 [hongloumeng-txt](https://github.com/Airmomo/hongloumeng-txt) 获取到符合 GraphRAG 格式要求的文件，获取完成后将文件放在`input/hongloumeng`目录下即可。
+**如果你也想要把红楼梦原文文本作为样本，可以通过我的另一个项目 [hongloumeng-txt](https://github.com/Airmomo/hongloumeng-txt) 获取到符合 GraphRAG 格式要求的文件，获取完成后将文件放在`input/hongloumeng`目录下即可。**
 
 ```yaml
 # ... 其他设置保持不变 ...
@@ -112,18 +114,18 @@ input:
 # ... 其他设置保持不变 ...
 ```
 
-构建过程中会自动创建
+在构建过程中会自动创建两个目录：
 
-- output 目录，用于存放查询结果。
-- cache 目录，用于存放缓存数据。
+- `output` 目录，用于存放查询结果。
+- `cache` 目录，用于存放缓存数据。
 
-索引构建完成后会提示：`All workflows completed successfully` ，说明即可进行查询。
+索引构建完成后会提示：`All workflows completed successfully` ，说明即可进行查询。（构建速度还是比较慢的，可以在控制台看到进度条。）
 
 # 查询测试
 
 ## global 全局查询
 
-```python
+```shell
 python -m graphrag.query --root ./graphrag-practice-chinese --method global "故事的主旨是什么？"
 ```
 
@@ -140,7 +142,7 @@ SUCCESS: Global Search Response:
 
 ## local 本地查询
 
-```python
+```shell
 python -m graphrag.query --root ./graphrag-practice-chinese --method local "贾母对宝玉的态度怎么样？"
 ```
 
@@ -150,13 +152,13 @@ python -m graphrag.query --root ./graphrag-practice-chinese --method local "贾�
 SUCCESS: Local Search Response:
 贾母对宝玉的态度可以从多个方面进行总结：
 
-1. **溺爱与关心**：贾母对宝玉有着深厚的溺爱。在《红楼梦》中，贾母多次探望宝玉，甚至亲自到园中看望他，表现出对宝玉的关心和爱护。例如，在贾母探视宝玉的情况中，贾母和王夫人一同探望宝玉，并询问他的病情，显示出贾母对宝玉的关心（Data: Entities (4704, 2929, 3895, 5470, 5868)）。
+1. 溺爱与关心：贾母对宝玉有着深厚的溺爱。在《红楼梦》中，贾母多次探望宝玉，甚至亲自到园中看望他，表现出对宝玉的关心和爱护。例如，在贾母探视宝玉的情况中，贾母和王夫人一同探望宝玉，并询问他的病情，显示出贾母对宝玉的关心（Data: Entities (4704, 2929, 3895, 5470, 5868)）。
 
-2. **宠爱与宽容**：贾母对宝玉的宠爱还体现在对宝玉行为的宽容上。宝玉性格顽劣，有时甚至有些荒唐，但贾母却总是以宽容的态度对待他。例如，贾母对宝玉的干妈“老东西”的指责，显示出贾母对宝玉的宠爱（Data: Relationships (528, 2124)）。
+2. 宠爱与宽容：贾母对宝玉的宠爱还体现在对宝玉行为的宽容上。宝玉性格顽劣，有时甚至有些荒唐，但贾母却总是以宽容的态度对待他。例如，贾母对宝玉的干妈“老东西”的指责，显示出贾母对宝玉的宠爱（Data: Relationships (528, 2124)）。
 
-3. **期望与教育**：尽管贾母对宝玉宠爱有加，但她也关心宝玉的教育。在贾母房中，贾母关注宝玉的教育，并关心他的成长（Data: Entities (2702, 5524, 5868)）。
+3. 期望与教育：尽管贾母对宝玉宠爱有加，但她也关心宝玉的教育。在贾母房中，贾母关注宝玉的教育，并关心他的成长（Data: Entities (2702, 5524, 5868)）。
 
-4. **情感交流**：贾母与宝玉之间有着深厚的情感交流。在贾母与宝玉的互动中，贾母不仅关心宝玉的身体健康，还关心他的心理状态，体现出两人之间深厚的感情（Data: Sources (607, 314, 481)）。
+4. 情感交流：贾母与宝玉之间有着深厚的情感交流。在贾母与宝玉的互动中，贾母不仅关心宝玉的身体健康，还关心他的心理状态，体现出两人之间深厚的感情（Data: Sources (607, 314, 481)）。
 
 综上所述，贾母对宝玉的态度是溺爱、关心、宠爱、宽容，同时也有期望和教育。这种复杂的情感关系，体现了贾母对宝玉的深厚感情。
 ```
