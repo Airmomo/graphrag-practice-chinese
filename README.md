@@ -2,18 +2,21 @@
 
 `graphrag-practice-chinese`是一个 GraphRAG 的应用实例，项目特点在于提供了替换 OpenAI 模型的方法，并通过修改原有提示和切分文档的方法，提高了 GraphRAG 处理中文内容的能力。
 
-# 搭建环境
+# 搭建环境(非常关键！)
 
 ```bash
-mkdir ./graphrag-practice-chinese
+git clone https://github.com/zhaoyingjun/graphrag-practice-chinese.git
+
+cd ./graphrag-practice-chinese
+
+# 安装项目运行所需的依赖
+pip install -r ./requirements.txt
 
 # 创建 input 目录，用于构建索引的文本文件默认存放于该目录下，可以按需修改 settings.yaml 文件中的 input 部分来指定路径
-mkdir ./graphrag-practice-chinese/input
+mkdir ./input
 
-git clone https://github.com/zhaoyingjun/graphrag-practice-chinese.git ./graphrag-practice-chinese
-
-# 这一命令将在 ./graphrag-practice-chinese 目录中创建两个文件：.env 和 settings.yaml
-python -m graphrag.index --init --root ./graphrag-practice-chinese
+# 这一命令将在 graphrag-practice-chinese 目录中创建两个文件：.env 和 settings.yaml
+python -m graphrag.index --init --root ./
 ```
 
 # 修改配置文件
