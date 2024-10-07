@@ -4,7 +4,7 @@
 
 # 搭建环境
 
-```shell
+```bash
 mkdir ./graphrag-practice-chinese
 
 # 创建 input 目录，用于构建索引的文本文件默认存放于该目录下，可以按需修改 settings.yaml 文件中的 input 部分来指定路径
@@ -24,33 +24,33 @@ GraphRAG 主要的配置文件有两个：`.env` 和 `settings.yaml`：
 
 - `settings.yaml` 包含 pipeline 相关的设置。
 
-```
-在项目根目录你可以找到作为参考的配置文件 `demo.env` 和 `settings.demo.yaml`。
-你可以参考配置进行修改，也可以通过重命名覆盖初始化的配置文件。
-```
+**在项目根目录你可以找到作为参考的配置文件 [demo.env](./demo.env) 和 [settings.demo.yaml](./settings.demo.yaml)。**
+**你可以参考配置进行修改，也可以通过重命名覆盖初始化的配置文件。**
 
-**这里推荐使用大语言模型 glm-4-flash（首个免费调用的模型），因为在推理和总结阶段需要消耗大量的 Tokens。
-我尝试对完整的《红楼梦》原文构建索引，最终消耗了大约 700W 个 Tokens，个人学习用的话尽力而为吧。**
+```
+这里推荐使用大语言模型 glm-4-flash（首个免费调用的模型），因为在推理和总结阶段需要消耗大量的 Tokens。
+我尝试对完整的《红楼梦》原文构建索引，最终消耗了大约 700W 个 Tokens，个人学习用的话尽力而为吧。
+```
 
 # 优化策略 — 使模型侧重中文
 
 ## 优化 1: 文本切分
 
-官方分块把文档按照 token 数进行切分，对于中文来说容易在 chunk 之间出现乱码，这里参考 Langchain-ChatChat 开源项目，用中文字符数对文本进行切分。
+官方分块把文档按照 token 数进行切分，对于中文来说容易在 chunk 之间出现乱码，这里参考 `Langchain-ChatChat` 开源项目，用中文字符数对文本进行切分。
 
 **方法 1:**
 
-用本项目下的 `splitter/chinese_text_splitter.py` 替换掉 python 依赖库中的 `graphrag/index/verbs/text/chunk/strategies/tokens.py` 即可。
+用本项目下的 [tokens](./splitter/tokens.py) 替换掉 python 依赖库中的 `graphrag/index/verbs/text/chunk/strategies/tokens.py` 即可。
 
 **方法 2:**
 
-要使用 `chinese_text_splitter.py` 中的 `ChineseTextSplitter` 作为文档分割方法，您需要在 `settings.yaml` 文件中添加一个新的 `splitter` 部分。以下是修改后的相关部分：
+要使用 [chinese_text_splitter](./splitter/chinese_text_splitter.py) 中的 `ChineseTextSplitter` 作为文档分割方法，您需要在 `settings.yaml` 文件中添加一个新的 `splitter` 部分。以下是修改后的相关部分：
 
 ```yaml
 # ... 其他设置保持不变 ...
 chunks:
-  size: 1200
-  overlap: 100
+  size: 2500
+  overlap: 300
   group_by_columns: [id]
 
 splitter:
@@ -79,7 +79,7 @@ splitter:
 
 ## 优化 2: prompt
 
-在 `prompts` 中可以看到 GraphRAG 的四个 prompt 文件的内容都由英文书写，并要求 LLM 使用英文输出。为了更好地处理中文内容，这里使用 `gpt-4o` 模型，将 `prompts` 中的四个 prompt 文件都翻译成中文，并要求 LLM 用中文输出结果。
+在 [prompts/](./prompts/) 中可以看到 GraphRAG 的四个 prompt 文件的内容都由英文书写，并要求 LLM 使用英文输出。为了更好地处理中文内容，这里我使用 `gpt-4o` 模型，将 `prompts/` 中的四个 prompt 文件都翻译成中文，并要求 LLM 用中文输出结果。
 
 ## 优化 3: 模型调用
 
@@ -91,7 +91,7 @@ GraphRAG 默认使用 gpt-4o 模型，该模型为国外模型，对中文支持
 
 # 索引构建
 
-```shell
+```bash
 python -m graphrag.index --root ./graphrag-practice-chinese
 ```
 
@@ -99,7 +99,7 @@ GraphRAG 会默认为 `input` 路径下的 `txt` 文件构建索引，如果需�
 
 **注意 GraphRAG 仅支持 `txt 或 csv` 类型的文件，编码格式必须为 `utf-8`。**
 
-在本项目中，我将红楼梦原文文本作为样本，在此处将文件路径修改为`input/hongloumeng`，如下:
+在本项目中，我将红楼梦原文文本作为样本，在此处将文件路径(`base_dir`)修改为`input/hongloumeng`，如下:
 
 **如果你也想要把红楼梦原文文本作为样本，可以通过我的另一个项目 [hongloumeng-txt](https://github.com/Airmomo/hongloumeng-txt) 获取到符合 GraphRAG 格式要求的文件，获取完成后将文件放在`input/hongloumeng`目录下即可。**
 
@@ -125,7 +125,7 @@ input:
 
 ## global 全局查询
 
-```shell
+```bash
 python -m graphrag.query --root ./graphrag-practice-chinese --method global "故事的主旨是什么？"
 ```
 
@@ -142,7 +142,7 @@ SUCCESS: Global Search Response:
 
 ## local 本地查询
 
-```shell
+```bash
 python -m graphrag.query --root ./graphrag-practice-chinese --method local "贾母对宝玉的态度怎么样？"
 ```
 
