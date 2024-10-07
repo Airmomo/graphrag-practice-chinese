@@ -16,7 +16,6 @@ from graphrag.index.verbs.text.chunk.typing import TextChunk
 # CHUNK_OVERLAP是指在处理文本数据时，将文本分成多个小块（chunk）时，相邻块之间重叠的部分。这样做可以确保在分块处理时不会丢失重要信息，特别是在进行文本分类、实体识别等任务时，有助于提高模型的准确性和连贯性。
 DEFAULT_CHUNK_SIZE = 2500  # tokens
 DEFAULT_CHUNK_OVERLAP = 300  # tokens
-DEFAULT_ENCODING_NAME = "cl100k_base"
 
 
 def run(
@@ -25,7 +24,7 @@ def run(
     """切分文本"""
     tokens_per_chunk = args.get("chunk_size", DEFAULT_CHUNK_SIZE)
     chunk_overlap = args.get("chunk_overlap", DEFAULT_CHUNK_OVERLAP)
-    encoding_name = args.get("encoding_name", DEFAULT_ENCODING_NAME)
+    encoding_name = args.get("encoding_name", "cl100k_base")
     enc = tiktoken.get_encoding(encoding_name)
 
     def encode(text: str) -> list[int]:
