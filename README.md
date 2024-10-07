@@ -40,11 +40,11 @@ GraphRAG 主要的配置文件有两个：`.env` 和 `settings.yaml`：
 
 **方法 1:**
 
-用本项目下的 [tokens](./splitter/tokens.py) 替换掉 python 依赖库中的 `graphrag/index/verbs/text/chunk/strategies/tokens.py` 即可。
+使用 [splitter/tokens.py](./splitter/tokens.py) 替换掉 python 依赖库中的 `graphrag/index/verbs/text/chunk/strategies/tokens.py` 即可。
 
 **方法 2:**
 
-要使用 [chinese_text_splitter](./splitter/chinese_text_splitter.py) 中的 `ChineseTextSplitter` 作为文档分割方法，您需要在 `settings.yaml` 文件中添加一个新的 `splitter` 部分。以下是修改后的相关部分：
+使用 [splitter/chinese_text_splitter](./splitter/chinese_text_splitter.py) 中的 `ChineseTextSplitter` 作为文档分割方法，你需要在 `settings.yaml` 文件中添加一个新的 `splitter` 部分。以下是修改后的相关部分：
 
 ```yaml
 # ... 其他设置保持不变 ...
@@ -68,14 +68,14 @@ splitter:
 1. 保留原有的 `chunks` 部分，因为它可能仍被用于其他目的。
 2. 添加新的 `splitter` 部分：
    - type: `custom` 表示我们使用自定义的分割器。
-   - module: `splitter.chinese_text_splitter` 指定了包含 `ChineseTextSplitter` 类的 Python 模块路径。请确保这个路径正确反映了 `chinese_text_splitter.py` 文件在您项目中的位置。
+   - module: `splitter.chinese_text_splitter` 指定了包含 `ChineseTextSplitter` 类的 Python 模块路径。请确保这个路径正确反映了 `chinese_text_splitter.py` 文件在你项目中的位置。
    - class: `ChineseTextSplitter` 指定了要使用的类名。
-   - params 部分包含了传递给 `ChineseTextSplitter` 的参数。这里设置了 `pdf: false` 和 `sentence_size: 250`，您可以根据需要调整这些值。
+   - params 部分包含了传递给 `ChineseTextSplitter` 的参数。这里设置了 `pdf: false` 和 `sentence_size: 250`，你可以根据需要调整这些值。
 
 请注意：
 
 1. 确保 `chinese_text_splitter.py` 文件位于正确的位置，使得 GraphRAG 能够找到并导入它。
-2. 修改完成后，保存 `settings.yaml` 文件，然后**重新运行 GraphRAG 的索引构建命令**，就会使用 `ChineseTextSplitter` 来分割您的文档。
+2. 修改完成后，保存 `settings.yaml` 文件，然后**重新运行 GraphRAG 的索引构建命令**，就会使用 `ChineseTextSplitter` 来分割你的文档。
 
 ## 优化 2: 使用中文提示词(chinese-prompt)
 
