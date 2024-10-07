@@ -77,9 +77,13 @@ splitter:
 1. 确保 `chinese_text_splitter.py` 文件位于正确的位置，使得 GraphRAG 能够找到并导入它。
 2. 修改完成后，保存 `settings.yaml` 文件，然后**重新运行 GraphRAG 的索引构建命令**，就会使用 `ChineseTextSplitter` 来分割您的文档。
 
-## 优化 2: prompt
+## 优化 2: 使用中文提示词(chinese-prompt)
 
-在 [prompts/](./prompts/) 中可以看到 GraphRAG 的四个 prompt 文件的内容都由英文书写，并要求 LLM 使用英文输出。为了更好地处理中文内容，这里我使用 `gpt-4o` 模型，将 `prompts/` 中的四个 prompt 文件都翻译成中文，并要求 LLM 用中文输出结果。
+初始化后，在 `prompts` 目录中可以看到 GraphRAG 的四个 prompt 文件的内容都由英文书写，并要求 LLM 使用英文输出。
+
+为了更好地处理中文内容，这里我使用 `gpt-4o` 模型，将 [prompts/](./prompts/) 中的四个 prompt 文件都翻译成中文，并要求 LLM 用中文输出结果。
+
+**如果你有更好的想法，想要自定义提示词，同样可以通过修改这四个 prompt 文件来实现，但注意不要修改提示词的文件名，以及不要修改和遗漏了在原提示词中有关输出的关键字段和格式，以免 GraphRAG 无法正常获取它们。**
 
 ## 优化 3: 模型调用
 
@@ -119,7 +123,7 @@ input:
 - `output` 目录，用于存放查询结果。
 - `cache` 目录，用于存放缓存数据。
 
-索引构建完成后会提示：`All workflows completed successfully` ，说明即可进行查询。（构建速度还是比较慢的，可以在控制台看到进度条。）
+索引构建完成后会提示：`All workflows completed successfully` ，说明即可构建完成，随时可以进行查询。（如果没有 GPU 加持的话，构建的过程还是比较久的，可以在控制台你看到每一个步骤的进度条。）
 
 # 查询测试
 
