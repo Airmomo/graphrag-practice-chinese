@@ -96,19 +96,31 @@ GraphRAG 默认使用 openai 进行模型调用，该模型为国外模型，对
 
 GraphRAG 默认使用 gpt-4o 模型，该模型为国外模型，对中文支持并不友好。为更好地支持中文，这里选择 `glm-4-plus` 模型，该模型为国内大模型厂商智谱 AI 提供。
 
-# 索引构建
+# 构建索引
+
+1. 通过运行如下命令， Graphrag 会在指定的文件路径下加载配置文件`.env`和`setting.yaml`，并按照你的配置开始构建索引。
 
 ```bash
 python -m graphrag.index --root ./graphrag-practice-chinese
 ```
 
-GraphRAG 会默认为 `input` 路径下的 `txt` 文件构建索引，如果需要指定文本文件的路径或类型，可以修改`settings.yaml`中的`input`部分。
+- 假设你当前的文件路径已经在`graphrag-practice-chinese`下的话，命令指定的构建路径应该为当前目录，则构建索引的命令应该是：
 
-**注意 GraphRAG 仅支持 `txt 或 csv` 类型的文件，编码格式必须为 `utf-8`。**
+```bash
+python -m graphrag.index --root ./
+```
 
-在本项目中，我将红楼梦原文文本作为样本，在此处将文件路径(`base_dir`)修改为`input/hongloumeng`，如下:
+**你需要确保指定的文件路径下存在配置文件`.env`和`setting.yaml`，且配置了正确的`api_key`。**
 
-**如果你也想要把红楼梦原文文本作为样本，可以通过我的另一个项目 [hongloumeng-txt](https://github.com/Airmomo/hongloumeng-txt) 获取到符合 GraphRAG 格式要求的文件，获取完成后将文件放在`input/hongloumeng`目录下即可。**
+**自定义样本数据**
+
+GraphRAG 会默认为 `input` 路径下的 `txt` 文件构建索引，**如果需要指定文件的路径或类型，可以修改`settings.yaml`中的`input`部分**。
+
+```
+注意！GraphRAG 仅支持 `txt 或 csv` 类型的文件，编码格式必须为 `utf-8`。
+```
+
+在本项目中，我将红楼梦原文文本作为样本，所以在配置文件`setting.yaml`中将文件路径`base_dir`修改为`input/hongloumeng`，如下:
 
 ```yaml
 # ... 其他设置保持不变 ...
@@ -121,12 +133,14 @@ input:
 # ... 其他设置保持不变 ...
 ```
 
-在构建过程中会自动创建两个目录：
+**如果你也想要把红楼梦原文文本作为样本，可以通过我的另一个项目 [hongloumeng-txt](https://github.com/Airmomo/hongloumeng-txt) 获取到符合 GraphRAG 格式要求的文件，获取完成后将文件放在`input/hongloumeng`目录下即可。**
+
+2. 在构建过程中会自动创建两个目录：
 
 - `output` 目录，用于存放查询结果。
 - `cache` 目录，用于存放缓存数据。
 
-索引构建完成后会提示：`All workflows completed successfully` ，说明即可构建完成，随时可以进行查询。（如果没有 GPU 加持的话，构建的过程还是比较久的，可以在控制台你看到每一个步骤的进度条。）
+3. 索引构建完成后会提示：`All workflows completed successfully` ，说明即可构建完成，随时可以进行查询。（如果没有 GPU 加持的话，构建的过程还是比较久的，可以在控制台你看到每一个步骤的进度条。）
 
 # 查询测试
 
