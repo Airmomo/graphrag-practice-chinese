@@ -58,14 +58,6 @@ chunks:
   overlap: 100
   group_by_columns: [id]
 
-splitter:
-  type: custom
-  module: splitter.chinese_text_splitter
-  class: ChineseTextSplitter
-  params:
-    pdf: false
-    sentence_size: 250
-
 input:
   type: file # or blob
   file_type: text # or csv
